@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\themy\\OneDrive\\Documentos\\Programação\\C\\StorEaseAPI\\StorEaseAPI.csproj": {}
+    "C:\\Users\\themy\\OneDrive\\Documentos\\Programação\\C\\StorEasyAPI\\StorEaseAPI.csproj": {}
   },
   "projects": {
-    "C:\\Users\\themy\\OneDrive\\Documentos\\Programação\\C\\StorEaseAPI\\StorEaseAPI.csproj": {
+    "C:\\Users\\themy\\OneDrive\\Documentos\\Programação\\C\\StorEasyAPI\\StorEaseAPI.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\themy\\OneDrive\\Documentos\\Programação\\C\\StorEaseAPI\\StorEaseAPI.csproj",
+        "projectUniqueName": "C:\\Users\\themy\\OneDrive\\Documentos\\Programação\\C\\StorEasyAPI\\StorEaseAPI.csproj",
         "projectName": "StorEaseAPI",
-        "projectPath": "C:\\Users\\themy\\OneDrive\\Documentos\\Programação\\C\\StorEaseAPI\\StorEaseAPI.csproj",
+        "projectPath": "C:\\Users\\themy\\OneDrive\\Documentos\\Programação\\C\\StorEasyAPI\\StorEaseAPI.csproj",
         "packagesPath": "C:\\Users\\themy\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\themy\\OneDrive\\Documentos\\Programação\\C\\StorEaseAPI\\obj\\",
+        "outputPath": "C:\\Users\\themy\\OneDrive\\Documentos\\Programação\\C\\StorEasyAPI\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\themy\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -44,6 +44,26 @@
             "Microsoft.AspNetCore.OpenApi": {
               "target": "Package",
               "version": "[7.0.9, )"
+            },
+            "Microsoft.EntityFrameworkCore": {
+              "target": "Package",
+              "version": "[7.0.12, )"
+            },
+            "Microsoft.EntityFrameworkCore.Design": {
+              "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[7.0.12, )"
+            },
+            "Microsoft.EntityFrameworkCore.SqlServer": {
+              "target": "Package",
+              "version": "[7.0.12, )"
+            },
+            "Microsoft.EntityFrameworkCore.Tools": {
+              "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[7.0.12, )"
             },
             "Swashbuckle.AspNetCore": {
               "target": "Package",
