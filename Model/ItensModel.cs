@@ -15,5 +15,5 @@ public class ItemModel
     public decimal Preco { get; set; }
 
     [DataType(DataType.DateTime)]
-    public DateTime? DataCadastro { get; set; }
+    public DateTime? DataCadastro { get; set; } = DateTime.Now;
 }

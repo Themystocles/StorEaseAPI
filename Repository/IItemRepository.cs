@@ -6,7 +6,7 @@
 
         ItemModel Get(int id);
 
-        void Update(ItemModel usuario);
+        void Update(ItemModel item);
 
         void Delete(int id);
 

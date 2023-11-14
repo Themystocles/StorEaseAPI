@@ -7,6 +7,7 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddTransient<IItemRepository, itemRepository>();
+builder.Services.AddTransient<IHistoricoRepository, HistoricoRepository>();
 
 var app = builder.Build();
 

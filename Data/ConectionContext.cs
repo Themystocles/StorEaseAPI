@@ -3,6 +3,8 @@ using Microsoft.EntityFrameworkCore;
 public class ConnectionContext : DbContext
     {
         public DbSet<ItemModel> Item { get; set; }
+        public DbSet<HistoricoModel> Historicos  { get; set; }
+    
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             if (!optionsBuilder.IsConfigured)

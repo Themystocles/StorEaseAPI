@@ -29,11 +29,23 @@ public class itemRepository : IItemRepository
 
     public ItemModel Get(int id)
     {
-        throw new NotImplementedException();
+       return _context.Item.FirstOrDefault(u => u.Id == id);
     }
 
-    public void Update(ItemModel usuario)
+    public void Update(ItemModel item)
     {
-        throw new NotImplementedException();
+        var existingUsuarios = _context.Item.Find(item.Id);
+
+            if (existingUsuarios != null)
+            {
+               
+                existingUsuarios.Nome = item.Nome;
+                existingUsuarios.Quantidade = item.Quantidade;
+                existingUsuarios.Preco = item.Preco;
+                
+
+                _context.SaveChanges();
+            }
+           
     }
 }
