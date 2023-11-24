@@ -1,5 +1,6 @@
 using System.Runtime.CompilerServices;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.JSInterop.Infrastructure;
 
 namespace StorEaseAPI.Controllers;
 
@@ -7,12 +8,16 @@ namespace StorEaseAPI.Controllers;
 [Route("api/Itens")]
 public class ItemController : ControllerBase
 {
-   private readonly IItemRepository _ItemRepository;  
+   private readonly IItemRepository _ItemRepository;    
    private readonly IHistoricoRepository _historyrepository;
-   
-   public ItemController(IItemRepository itemRepository, IHistoricoRepository historicoRepository){
+
+   private readonly IHistoricoDoisRepository _historicoDoisRepository;
+
+  
+   public ItemController(IItemRepository itemRepository, IHistoricoRepository historicoRepository, IHistoricoDoisRepository historicoDoisReposytory){
     _ItemRepository = itemRepository;
     _historyrepository = historicoRepository;
+    _historicoDoisRepository = historicoDoisReposytory;
 
    }
     // GET: api/Usuario
@@ -22,6 +27,19 @@ public class ItemController : ControllerBase
             var Item = _ItemRepository.Get();
             return Ok(Item);
         }
+      [HttpGet("historicodois")]
+     public ActionResult<IEnumerable<HistoricoDoisModel>> Gets()
+        {
+          var historicoDois = _historicoDoisRepository.Get().ToList();
+           return Ok(historicoDois);
+         }
+         [HttpGet("historico")]
+        public ActionResult<IEnumerable<HistoricoModel>> Getts()
+        {
+            var historico = _historyrepository.Get().ToList();
+            return Ok(historico);
+        }
+
       [HttpGet("{id}")]
         public ActionResult<ItemModel> Get(int id)
         {
@@ -31,6 +49,16 @@ public class ItemController : ControllerBase
                 return NotFound("Usuário não encontrado"); // Retorna 404 Not Found se o usuário não for encontrado.
             }
             return Ok(Item);
+        }
+        [HttpPost("historicoDois")]
+        public ActionResult Post(HistoricoDoisModel historicoDois){
+             if (historicoDois == null)
+            {
+               return BadRequest("Nenhum item foi cadastrado. opção cancelada."); // Retorna 400 Bad Request se o objeto for nulo.
+            }
+             _historicoDoisRepository.Add(historicoDois);
+            return CreatedAtAction("Get", new { id = historicoDois.Id }, historicoDois); // Retorna 201 Created.
+
         }
 
         [HttpPost]

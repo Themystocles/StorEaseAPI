@@ -4,6 +4,9 @@ public class ConnectionContext : DbContext
     {
         public DbSet<ItemModel> Item { get; set; }
         public DbSet<HistoricoModel> Historicos  { get; set; }
+        public DbSet<HistoricoDoisModel> HistoricoDois  { get; set; }
+       
+       
     
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

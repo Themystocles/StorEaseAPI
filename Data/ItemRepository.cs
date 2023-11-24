@@ -2,6 +2,7 @@
 public class itemRepository : IItemRepository
 {
     private readonly ConnectionContext _context = new ConnectionContext();
+    
 
     public void Add(ItemModel item)
     {
@@ -19,12 +20,13 @@ public class itemRepository : IItemRepository
                 _context.SaveChanges();
             }
     }
-
-
-
     public List<ItemModel> Get()
     {
         return _context.Item.ToList();
+    }
+      public List<HistoricoModel> Gets()
+    {
+        return _context.Historicos.ToList();
     }
 
     public ItemModel Get(int id)
