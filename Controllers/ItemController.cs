@@ -1,146 +1,137 @@
-using System.Runtime.CompilerServices;
+using System.Collections.Generic;
+using System.Linq;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.JSInterop.Infrastructure;
 
-namespace StorEaseAPI.Controllers;
-
-[ApiController]
-[Route("api/Itens")]
-public class ItemController : ControllerBase
+namespace StorEaseAPI.Controllers
 {
-   private readonly IItemRepository _ItemRepository;    
-   private readonly IHistoricoRepository _historyrepository;
+    [ApiController]
+    [Route("api/itens")]
+    public class ItemController : ControllerBase
+    {
+        private readonly IItemRepository _itemRepository;
+        private readonly IHistoricoRepository _historicoRepository;
+        private readonly ITransactionHistory _transactionHistory;
 
-   private readonly IHistoricoDoisRepository _historicoDoisRepository;
-
-  
-   public ItemController(IItemRepository itemRepository, IHistoricoRepository historicoRepository, IHistoricoDoisRepository historicoDoisReposytory){
-    _ItemRepository = itemRepository;
-    _historyrepository = historicoRepository;
-    _historicoDoisRepository = historicoDoisReposytory;
-
-   }
-    // GET: api/Usuario
-        [HttpGet]
-        public ActionResult<IEnumerable<ItemModel>> Get()
+        public ItemController(IItemRepository itemRepository, IHistoricoRepository historicoRepository, ITransactionHistory transactionHistory)
         {
-            var Item = _ItemRepository.Get();
-            return Ok(Item);
+            _itemRepository = itemRepository;
+            _historicoRepository = historicoRepository;
+            _transactionHistory = transactionHistory;
         }
-      [HttpGet("historicodois")]
-     public ActionResult<IEnumerable<HistoricoDoisModel>> Gets()
+        [Authorize]
+        [HttpGet]
+        public ActionResult<IEnumerable<ItemModel>> GetAllItems()
         {
-          var historicoDois = _historicoDoisRepository.Get().ToList();
-           return Ok(historicoDois);
-         }
-         [HttpGet("historico")]
-        public ActionResult<IEnumerable<HistoricoModel>> Getts()
+            var items = _itemRepository.Get();
+            return Ok(items);
+        }
+        [Authorize]
+        [HttpGet("historicodois")]
+        public ActionResult<IEnumerable<TransactionHistory>> GetTransactionHistory()
         {
-            var historico = _historyrepository.Get().ToList();
+            var transactionHistory = _transactionHistory.Get().ToList();
+            return Ok(transactionHistory);
+        }
+        [Authorize]
+        [HttpGet("historico")]
+        public ActionResult<IEnumerable<HistoricoModel>> GetHistorico()
+        {
+            var historico = _historicoRepository.Get().ToList();
             return Ok(historico);
         }
-
-      [HttpGet("{id}")]
-        public ActionResult<ItemModel> Get(int id)
+        [Authorize]
+        [HttpGet("{id}")]
+        public ActionResult<ItemModel> GetItemById(int id)
         {
-            var Item = _ItemRepository.Get(id);
-            if (Item == null)
+            var item = _itemRepository.Get(id);
+            if (item == null)
             {
-                return NotFound("Usuário não encontrado"); // Retorna 404 Not Found se o usuário não for encontrado.
+                return NotFound("Item não encontrado.");
             }
-            return Ok(Item);
+            return Ok(item);
         }
+        [Authorize]
         [HttpPost("historicoDois")]
-        public ActionResult Post(HistoricoDoisModel historicoDois){
-             if (historicoDois == null)
+        public ActionResult PostTransactionHistory(TransactionHistory transaction)
+        {
+            if (transaction == null)
             {
-               return BadRequest("Nenhum item foi cadastrado. opção cancelada."); // Retorna 400 Bad Request se o objeto for nulo.
+                return BadRequest("Nenhum item foi cadastrado. Opção cancelada.");
             }
-             _historicoDoisRepository.Add(historicoDois);
-            return CreatedAtAction("Get", new { id = historicoDois.Id }, historicoDois); // Retorna 201 Created.
 
+            _transactionHistory.Add(transaction);
+            return CreatedAtAction(nameof(GetItemById), new { id = transaction.Id }, transaction);
         }
-
+        [Authorize]
         [HttpPost]
-        public ActionResult Post(ItemModel itemModel)
+        public ActionResult PostItem(ItemModel itemModel)
         {
             if (itemModel == null)
             {
-                return BadRequest("Nenhum item foi cadastrado. opção cancelada."); // Retorna 400 Bad Request se o objeto for nulo.
+                return BadRequest("Nenhum item foi cadastrado. Opção cancelada.");
             }
 
-            _ItemRepository.Add(itemModel);
+            _itemRepository.Add(itemModel);
 
-            var HistoricoItem = new HistoricoModel{
+            var historicoItem = new HistoricoModel
+            {
                 Item = itemModel.Nome,
                 Operacao = "ADICIONADO",
                 DataHoraRegistro = DateTime.Now
-                
             };
-             _historyrepository.Add(HistoricoItem);
+            _historicoRepository.Add(historicoItem);
 
- 
-            return CreatedAtAction("Get", new { id = itemModel.Id }, itemModel); // Retorna 201 Created.
+            return CreatedAtAction(nameof(GetItemById), new { id = itemModel.Id }, itemModel);
         }
-       [HttpDelete("{id}")]
-public IActionResult Delete(int id)
-{
-    var item = _ItemRepository.Get(id);
+        [Authorize]
+        [HttpDelete("{id}")]
+        public IActionResult DeleteItem(int id)
+        {
+            var item = _itemRepository.Get(id);
+            if (item == null)
+            {
+                return NotFound("Item não encontrado.");
+            }
 
-    if (item == null)
-    {
-        return NotFound(); // Retorna um código 404 Not Found se o item não for encontrado.
-    }
-       var HistoricoItem = new HistoricoModel{
+            var historicoItem = new HistoricoModel
+            {
                 Item = item.Nome,
                 Operacao = "DELETADO",
                 DataHoraRegistro = DateTime.Now
-     };
-       _historyrepository.Add(HistoricoItem);
-    
+            };
+            _historicoRepository.Add(historicoItem);
 
-    _ItemRepository.Delete(id);
-    // Adicione a lógica para copiar os dados do item excluído para a tabela de histórico, se necessário.
-    
-   
-
-    
-    return NoContent(); // Retorna um código 204 No Content para indicar que a exclusão foi bem-sucedida.
-}
-[HttpPut("{id}")]
-        public ActionResult Put(int id, ItemModel item)
+            _itemRepository.Delete(id);
+            return NoContent();
+        }
+        [Authorize]
+        [HttpPut("{id}")]
+        public ActionResult UpdateItem(int id, ItemModel item)
         {
             if (item == null)
             {
-                return BadRequest(); // Retorna 400 Bad Request se o objeto for nulo.
+                return BadRequest("O item não pode ser nulo.");
             }
 
-            var existingUsuario = _ItemRepository.Get(id);
-
-            if (existingUsuario == null)
+            var existingItem = _itemRepository.Get(id);
+            if (existingItem == null)
             {
-                return NotFound(); // Retorna 404 Not Found se o usuário não for encontrado.
+                return NotFound("Item não encontrado.");
             }
 
-            item.Id = id; // Certifica-se de que o ID do usuário corresponda ao parâmetro de rota.
+            item.Id = id;
+            _itemRepository.Update(item);
 
-            _ItemRepository.Update(item);
-
-              var HistoricoItem = new HistoricoModel{
+            var historicoItem = new HistoricoModel
+            {
                 Item = item.Nome,
                 Operacao = "ALTERADO",
                 DataHoraRegistro = DateTime.Now
-     };
-       _historyrepository.Add(HistoricoItem);
-            return NoContent(); // Retorna 204 No Content.
-            
+            };
+            _historicoRepository.Add(historicoItem);
 
-            
+            return NoContent();
         }
+    }
 }
-        
-
-
-
-
-

@@ -74,3 +74,4 @@ C:\Users\themy\OneDrive\Documentos\Programação\C\StorEasyAPI\obj\Debug\net7.0\
 C:\Users\themy\OneDrive\Documentos\Programação\C\StorEasyAPI\obj\Debug\net7.0\StorEaseAPI.pdb
 C:\Users\themy\OneDrive\Documentos\Programação\C\StorEasyAPI\obj\Debug\net7.0\StorEaseAPI.genruntimeconfig.cache
 C:\Users\themy\OneDrive\Documentos\Programação\C\StorEasyAPI\obj\Debug\net7.0\ref\StorEaseAPI.dll
+C:\Users\themy\OneDrive\Documentos\Programação\C\StorEasyAPI\bin\Debug\net7.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll

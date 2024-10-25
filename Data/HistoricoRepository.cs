@@ -5,14 +5,20 @@ using Microsoft.VisualBasic;
 public class HistoricoRepository : IHistoricoRepository
 {
 
-     private readonly ConnectionContext _context = new ConnectionContext();
-      
+    private readonly ConnectionContext _context;
+
+    public HistoricoRepository(ConnectionContext context)
+    {
+        _context = context;
+    }
+
+
 
     public void Add(HistoricoModel historico)
     {
         _context.Historicos.Add(historico);
         _context.SaveChanges();
-        
+
     }
 
     public void Delete(int id)

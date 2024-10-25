@@ -1,8 +1,12 @@
 
 public class itemRepository : IItemRepository
 {
-    private readonly ConnectionContext _context = new ConnectionContext();
-    
+    private readonly ConnectionContext _context;
+    public itemRepository(ConnectionContext context)
+    {
+        _context = context;
+    }
+
 
     public void Add(ItemModel item)
     {
@@ -14,40 +18,40 @@ public class itemRepository : IItemRepository
     {
         ItemModel itemparaexcluir = _context.Item.FirstOrDefault(u => u.Id == id);
         if (itemparaexcluir != null)
-            {
-                // O Item foi encontrado, então podemos excluí-lo
-                _context.Item.Remove(itemparaexcluir);
-                _context.SaveChanges();
-            }
+        {
+            // O Item foi encontrado, então podemos excluí-lo
+            _context.Item.Remove(itemparaexcluir);
+            _context.SaveChanges();
+        }
     }
     public List<ItemModel> Get()
     {
         return _context.Item.ToList();
     }
-      public List<HistoricoModel> Gets()
+    public List<HistoricoModel> Gets()
     {
         return _context.Historicos.ToList();
     }
 
     public ItemModel Get(int id)
     {
-       return _context.Item.FirstOrDefault(u => u.Id == id);
+        return _context.Item.FirstOrDefault(u => u.Id == id);
     }
 
     public void Update(ItemModel item)
     {
         var existingUsuarios = _context.Item.Find(item.Id);
 
-            if (existingUsuarios != null)
-            {
-               
-                existingUsuarios.Nome = item.Nome;
-                existingUsuarios.Quantidade = item.Quantidade;
-                existingUsuarios.Preco = item.Preco;
-                
+        if (existingUsuarios != null)
+        {
 
-                _context.SaveChanges();
-            }
-           
+            existingUsuarios.Nome = item.Nome;
+            existingUsuarios.Quantidade = item.Quantidade;
+            existingUsuarios.Preco = item.Preco;
+
+
+            _context.SaveChanges();
+        }
+
     }
 }
